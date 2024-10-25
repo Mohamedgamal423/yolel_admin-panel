@@ -6,7 +6,7 @@ export const getTotal = createAsyncThunk('statics', async () => {
   try {
     const token = localStorage.getItem('token'); // Retrieve token from local storage
     let response = await axios.get(
-      'https://yolelapp.com/statics/total-length',
+      'http://localhost:3000/statics/total-length',
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -38,6 +38,9 @@ export const getTotalSlice = createSlice({
       state.removedUsers = action.payload.removedUsers;
       state.reports = action.payload.reports;
       state.sharedUploads = action.payload.sharedUploads;
+      state.removedUploads = action.payload.removedUploads;
+      state.enhancementUsers = action.payload.enhancementUsers;
+      state.enhancementRequested = action.payload.enhancementRequested;
       state.loading = false;
     });
     builder.addCase(getTotal.rejected, (state, action) => {

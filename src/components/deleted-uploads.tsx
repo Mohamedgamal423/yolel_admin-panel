@@ -5,33 +5,25 @@ import { AppDispatch, RootState } from '../store/store';
 import { Upload } from '../store/uploads/upload.state';
 import UploadCard from './uploads-card';
 import Spinner from './Spinner/spinner';
-import { getUploads } from '../store/uploads/upload.slice';
 import AlertInfo from './Alert';
-import { useNavigate } from 'react-router-dom';
+import { getDeletedUploads } from '../store/uploads/deletedUploads.slice';
 
-const UploadsList = () => {
-  const navigate = useNavigate();
-
+const DeletedUploadsList = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [id, setId] = useState('');
   const { uploads, loading, totalPages } = useSelector(
-    (state: RootState) => state.uploads,
-  );
-
-  const { loading: deleteLoading } = useSelector(
-    (state: RootState) => state.deleteImage,
+    (state: RootState) => state.removedUploads,
   );
 
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     dispatch(
-      getUploads({
+      getDeletedUploads({
         page: currentPage,
         pageSize: 10,
       }),
     );
-  }, [dispatch, currentPage, deleteLoading]);
+  }, [dispatch, currentPage]);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -47,10 +39,6 @@ const UploadsList = () => {
     );
   }
 
-  const handleNavigateToHistory = (id: string) => {
-    navigate(`/history/${id}`);
-  };
-
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -62,9 +50,8 @@ const UploadsList = () => {
             gender={upload.gender}
             interactedVotes={upload.InteractedVotesLength}
             bestVotes={upload.bestVotesLength}
-            handleNavigateToHistory={() => handleNavigateToHistory(upload._id)}
             id={upload._id}
-            setId={setId}
+            isDeleted={true}
           />
         ))}
       </div>
@@ -92,4 +79,4 @@ const UploadsList = () => {
   );
 };
 
-export default UploadsList;
+export default DeletedUploadsList;

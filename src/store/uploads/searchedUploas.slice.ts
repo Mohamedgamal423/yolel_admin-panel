@@ -1,14 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { initialState } from './upload.state';
+import { baseUrl } from '../../config/config';
 
-export const getUploads = createAsyncThunk(
-  'uploads',
-  async (data: { page: number; pageSize: number }) => {
+export const getSearchedUploads = createAsyncThunk(
+  'search-uploads',
+  async (data: { percentage: number; page: number; pageSize: number }) => {
     try {
       const token = localStorage.getItem('token');
       let response = await axios.get(
-        `http://localhost:3000/posts/list/admin?page=${data.page}&pageSize=${data.pageSize}`,
+        `${baseUrl}posts/upload/search?percentage=${data.percentage}&page=${data.page}&pageSize=${data.pageSize}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -22,27 +23,28 @@ export const getUploads = createAsyncThunk(
   },
 );
 
-export const uploadSlice = createSlice({
-  name: 'uploads',
+export const searchUploadSlice = createSlice({
+  name: 'search-uploads',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getUploads.pending, (state) => {
+      .addCase(getSearchedUploads.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getUploads.fulfilled, (state, action) => {
+      .addCase(getSearchedUploads.fulfilled, (state, action) => {
+        console.log(action.payload);
         state.loading = false;
-        state.uploads = action.payload.items;
-        state.page = action.payload.page;
+        state.uploads = action.payload?.data || [];
+        state.page = action.payload?.currentPage;
         state.totalPages = action.payload.totalPages;
       })
-      .addCase(getUploads.rejected, (state, action) => {
+      .addCase(getSearchedUploads.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
       });
   },
 });
 
-export default uploadSlice.reducer;
+export default searchUploadSlice.reducer;

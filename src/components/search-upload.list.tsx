@@ -5,36 +5,57 @@ import { AppDispatch, RootState } from '../store/store';
 import { Upload } from '../store/uploads/upload.state';
 import UploadCard from './uploads-card';
 import Spinner from './Spinner/spinner';
-import { getUploads } from '../store/uploads/upload.slice';
 import AlertInfo from './Alert';
 import { useNavigate } from 'react-router-dom';
+import { getSearchedUploads } from '../store/uploads/searchedUploas.slice';
 
-const UploadsList = () => {
+const SearchUploads = () => {
   const navigate = useNavigate();
 
-  const dispatch = useDispatch<AppDispatch>();
-  const [id, setId] = useState('');
-  const { uploads, loading, totalPages } = useSelector(
-    (state: RootState) => state.uploads,
-  );
+  // State for the percentage dropdown
+  const [percentageRange, setPercentageRange] = useState('lessThan33');
 
-  const { loading: deleteLoading } = useSelector(
-    (state: RootState) => state.deleteImage,
+  const dispatch = useDispatch<AppDispatch>();
+  const { uploads, loading, totalPages } = useSelector(
+    (state: RootState) => state.searchUpload,
   );
 
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Convert percentageRange to actual percentage values
+  const getPercentageValue = (range: string) => {
+    switch (range) {
+      case 'lessThan33':
+        return 32;
+      case 'between33and67':
+        return 50;
+      case 'moreThan67':
+        return 70;
+      default:
+        return 32;
+    }
+  };
+
+  const percentage = getPercentageValue(percentageRange);
+
   useEffect(() => {
     dispatch(
-      getUploads({
+      getSearchedUploads({
         page: currentPage,
         pageSize: 10,
+        percentage,
       }),
     );
-  }, [dispatch, currentPage, deleteLoading]);
+  }, [dispatch, currentPage, percentage]);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
+  };
+
+  // Handle dropdown selection change
+  const handleDropdownChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPercentageRange(e.target.value);
+    setCurrentPage(1); // Reset to the first page when changing percentage range
   };
 
   if (loading) {
@@ -43,7 +64,10 @@ const UploadsList = () => {
 
   if (!loading && uploads.length === 0) {
     return (
-      <AlertInfo title="No uploads found" message="No one upload images yet" />
+      <AlertInfo
+        title="No uploads found"
+        message="No one has uploaded images yet"
+      />
     );
   }
 
@@ -53,6 +77,24 @@ const UploadsList = () => {
 
   return (
     <>
+      {/* Dropdown for percentage selection */}
+      <div className="mb-4">
+        <label htmlFor="percentageRange" className="mr-2 text-lg font-medium">
+          Select Percentage Range:
+        </label>
+        <select
+          id="percentageRange"
+          value={percentageRange}
+          onChange={handleDropdownChange}
+          className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="lessThan33">Less than 33%</option>
+          <option value="between33and67">Between 33% and 67%</option>
+          <option value="moreThan67">More than 67%</option>
+        </select>
+      </div>
+
+      {/* Upload Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {uploads.map((upload: Upload) => (
           <UploadCard
@@ -60,14 +102,15 @@ const UploadsList = () => {
             imageUrl={`https://yolelapp.com/${upload.imageUrl}`}
             ageType={upload.ageType}
             gender={upload.gender}
-            interactedVotes={upload.InteractedVotesLength}
-            bestVotes={upload.bestVotesLength}
+            interactedVotes={upload.InteractedVotes.length}
+            bestVotes={upload.bestVotes.length}
             handleNavigateToHistory={() => handleNavigateToHistory(upload._id)}
-            id={upload._id}
-            setId={setId}
+            isSearched={true}
           />
         ))}
       </div>
+
+      {/* Pagination Controls */}
       <div className="flex justify-center mt-4 mb-4">
         <button
           className={`px-4 py-2 mx-2 text-sm font-medium text-white bg-blue-500 rounded ${
@@ -92,4 +135,4 @@ const UploadsList = () => {
   );
 };
 
-export default UploadsList;
+export default SearchUploads;

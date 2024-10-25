@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { UserState } from '../authState';
+import { baseUrl } from '../../../config/config';
 
 // Define async thunk for fetching user profile
 export const getUserData = createAsyncThunk('auth/userData', async () => {
@@ -9,7 +10,7 @@ export const getUserData = createAsyncThunk('auth/userData', async () => {
     const token = localStorage.getItem('token');
     if (!token) throw new Error('Token not found');
 
-    const response = await axios.get('https://yolelapp.com/user/profile', {
+    const response = await axios.get(`${baseUrl}user/profile`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

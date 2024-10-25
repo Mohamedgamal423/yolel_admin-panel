@@ -17,6 +17,7 @@ const DayStatics = () => {
     sharedUploads,
     uploads,
     users,
+    removedUploads,
     votes,
   } = useSelector((state: RootState) => state.daystatics);
 
@@ -35,6 +36,7 @@ const DayStatics = () => {
         <StaticsCard text="Removed Users" value={removedUsers} />
         <StaticsCard text="Reports" value={reports} />
         <StaticsCard text="Shared Uploads" value={sharedUploads} />
+        <StaticsCard text="Removed Image" value={removedUploads} />
       </div>
     </div>
   );

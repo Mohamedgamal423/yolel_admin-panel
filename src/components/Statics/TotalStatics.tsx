@@ -19,6 +19,9 @@ const TotalStaticsComponent = () => {
     users,
     votes,
     activeUsers,
+    removedUploads,
+    enhancementUsers,
+    enhancementRequested,
     females,
     males,
   } = useSelector((state: RootState) => state.totalstatics);
@@ -41,6 +44,15 @@ const TotalStaticsComponent = () => {
         <StaticsCard text="Removed Users" value={removedUsers} />
         <StaticsCard text="Reports" value={reports} />
         <StaticsCard text="Shared Uploads" value={sharedUploads} />
+        <StaticsCard text="Removed Image" value={removedUploads} />
+        <StaticsCard
+          text="Enhancement Users"
+          value={enhancementUsers as number}
+        />
+        <StaticsCard
+          text="Enhancement Requested"
+          value={enhancementRequested as number}
+        />
       </div>
     </div>
   );

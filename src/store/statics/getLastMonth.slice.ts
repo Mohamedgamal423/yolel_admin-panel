@@ -5,7 +5,7 @@ import { initialState } from './statics.state';
 export const getLastMonth = createAsyncThunk('last-month/statics', async () => {
   try {
     const token = localStorage.getItem('token'); // Retrieve token from local storage
-    let response = await axios.get('https://yolelapp.com/statics/last-month', {
+    let response = await axios.get('http://localhost:3000/statics/last-month', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -32,6 +32,7 @@ export const getLastMonthSlice = createSlice({
       state.removedUsers = action.payload.removedUsers;
       state.reports = action.payload.reports;
       state.sharedUploads = action.payload.sharedUploads;
+      state.removedUploads = action.payload.removedUploads;
       state.loading = false;
     });
     builder.addCase(getLastMonth.rejected, (state, action) => {

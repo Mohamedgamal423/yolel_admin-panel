@@ -1,14 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { initialState } from './upload.state';
+import { removedUploadState } from './upload.state';
+import { baseUrl } from '../../config/config';
 
-export const getUploads = createAsyncThunk(
-  'uploads',
+export const getDeletedUploads = createAsyncThunk(
+  'removed-uploads',
   async (data: { page: number; pageSize: number }) => {
     try {
       const token = localStorage.getItem('token');
       let response = await axios.get(
-        `http://localhost:3000/posts/list/admin?page=${data.page}&pageSize=${data.pageSize}`,
+        `${baseUrl}posts/images/deleted?page=${data.page}&pageSize=${data.pageSize}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -22,27 +23,27 @@ export const getUploads = createAsyncThunk(
   },
 );
 
-export const uploadSlice = createSlice({
-  name: 'uploads',
-  initialState,
+export const removedUploadSlice = createSlice({
+  name: 'removed-uploads',
+  initialState: removedUploadState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getUploads.pending, (state) => {
+      .addCase(getDeletedUploads.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getUploads.fulfilled, (state, action) => {
+      .addCase(getDeletedUploads.fulfilled, (state, action) => {
         state.loading = false;
-        state.uploads = action.payload.items;
+        state.uploads = action.payload;
         state.page = action.payload.page;
         state.totalPages = action.payload.totalPages;
       })
-      .addCase(getUploads.rejected, (state, action) => {
+      .addCase(getDeletedUploads.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Something went wrong';
       });
   },
 });
 
-export default uploadSlice.reducer;
+export default removedUploadSlice.reducer;

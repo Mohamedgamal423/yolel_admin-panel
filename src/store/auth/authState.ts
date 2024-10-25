@@ -16,6 +16,24 @@ export interface userData {
   user: {};
 }
 
+export interface CreateSubAdmin {
+  loading: boolean;
+  error: string | null;
+}
+
+export interface enhancementUsers {
+  loading: boolean;
+  error: string | null;
+  enhancementUsers: User[];
+  page: number;
+  totalPages: number;
+}
+
+export const CreateSubAdminState: CreateSubAdmin = {
+  loading: true,
+  error: null,
+};
+
 export const UserState: userData = {
   loading: true,
   error: null,
@@ -70,6 +88,7 @@ export interface User {
   IsBlocked?: boolean;
   isSocialRegister?: boolean;
   activeStatus?: boolean;
+  userPoints?: number;
 }
 
 export const BlockUserState: blockUser = {
@@ -92,4 +111,12 @@ export const BlockedUsersState: BlockedUsers = {
   users: [],
   page: 0,
   totalPages: 0,
+};
+
+export const enhancementUsersState: enhancementUsers = {
+  enhancementUsers: [],
+  loading: true,
+  error: null,
+  totalPages: 0,
+  page: 0,
 };

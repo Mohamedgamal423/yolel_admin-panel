@@ -8,7 +8,7 @@ export const login = createAsyncThunk(
   async (userData: { email: string; password: string }, { dispatch }) => {
     try {
       const response = await axios.post(
-        'https://yolelapp.com/user/admin/login',
+        'http://localhost:3000/user/admin/login',
         userData,
       );
       const data = response.data;

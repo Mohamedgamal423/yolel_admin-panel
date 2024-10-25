@@ -17,6 +17,7 @@ const WeekStatics = () => {
     sharedUploads,
     uploads,
     users,
+    removedUploads,
     votes,
   } = useSelector((state: RootState) => state.weekstatics);
 
@@ -35,6 +36,7 @@ const WeekStatics = () => {
         <StaticsCard text="Removed Users" value={removedUsers} />
         <StaticsCard text="Reports" value={reports} />
         <StaticsCard text="Shared Uploads" value={sharedUploads} />
+        <StaticsCard text="Removed Image" value={removedUploads} />
       </div>
     </div>
   );

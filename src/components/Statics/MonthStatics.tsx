@@ -16,6 +16,7 @@ const MonthStaticsComponent = () => {
     reports,
     sharedUploads,
     uploads,
+    removedUploads,
     users,
     votes,
   } = useSelector((state: RootState) => state.monthstatics);
@@ -35,6 +36,7 @@ const MonthStaticsComponent = () => {
         <StaticsCard text="Removed Users" value={removedUsers} />
         <StaticsCard text="Reports" value={reports} />
         <StaticsCard text="Shared Uploads" value={sharedUploads} />
+        <StaticsCard text="Removed Image" value={removedUploads} />
       </div>
     </div>
   );
